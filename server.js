@@ -8,7 +8,6 @@ const app = express();
 const port = process.env.PORT || 3001;
 
 app.use(cors());
-app.options('*', cors());
 app.use(bodyParser.json());
 
 const transporter = nodemailer.createTransport({
@@ -29,7 +28,7 @@ app.post('/send-email', (req, res) => {
     to: 'obliqware@gmail.com',
     subject: 'New Contact Form Submission - Obliqware',
     text: `
-      <h1>Obliqware Demo Products</h1>
+      <h1>Obliqware Contact Us</h1>
       Name: ${name}
       Last Name: ${lname}
       Email: ${email}
