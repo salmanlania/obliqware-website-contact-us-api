@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = process.env.PORT || 3001;
 
-app.use(cors());
+app.use(cors({ origin: '*' }));
 app.use(bodyParser.json());
 
 const transporter = nodemailer.createTransport({
