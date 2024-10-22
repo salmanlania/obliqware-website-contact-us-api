@@ -7,18 +7,12 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = process.env.PORT || 3001;
 
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*'); // Allow all origins
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  
-  // Handle preflight request
-  if (req.method === 'OPTIONS') {
-    return res.status(200).json({});
-  }
-
-  next();
-});
+const cors = require('cors');
+app.use(cors({
+  origin: '*', // Allow all origins
+  methods: ['GET', 'POST', 'OPTIONS'], // Allowed methods
+  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept'] // Allowed headers
+}));
 
 app.use(bodyParser.json());
 
