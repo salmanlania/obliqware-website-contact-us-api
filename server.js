@@ -69,19 +69,19 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = process.env.PORT || 3001;
 
-// Configure CORS to allow your frontend origin
-const corsOptions = {
-  origin: 'https://obliqware-new.vercel.app', // Replace with your frontend URL
-  methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-};
+// CORS middleware to allow all origins
+app.use(cors()); // Allow all origins
 
-// Apply CORS middleware
-app.use(cors(corsOptions));
-
-// Parse JSON bodies
+// Middleware to parse JSON bodies
 app.use(bodyParser.json());
 
+// Log incoming requests
+app.use((req, res, next) => {
+  console.log(`Received ${req.method} request for '${req.url}'`);
+  next();
+});
+
+// Nodemailer setup
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
   port: 587,
@@ -92,6 +92,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// Handle POST request to send email
 app.post('/send-email', (req, res) => {
   const { name, lname, email, number, message } = req.body;
 
@@ -111,10 +112,10 @@ app.post('/send-email', (req, res) => {
 
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-      console.log(error);
+      console.error('Error sending email:', error);
       return res.status(500).send('Error sending email');
     } else {
-      console.log('Email sent: ' + info.response);
+      console.log('Email sent:', info.response);
       return res.status(200).send('Email sent successfully');
     }
   });
