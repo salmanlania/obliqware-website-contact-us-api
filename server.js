@@ -7,7 +7,10 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = process.env.PORT || 3001;
 
-app.use(cors());
+app.use(cors({
+  origin: '*'
+}));
+
 app.use(bodyParser.json());
 
 const transporter = nodemailer.createTransport({
@@ -20,6 +23,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+
 app.post('/send-email', (req, res) => {
   const { name, lname, email, number, message } = req.body;
 
@@ -29,7 +33,7 @@ app.post('/send-email', (req, res) => {
     subject: 'New Contact Form Submission - Obliqware',
     text: `
       <h1>Obliqware Contact Us</h1>
-      Name: ${name}
+      First Name: ${name}
       Last Name: ${lname}
       Email: ${email}
       Number: ${number}
@@ -47,6 +51,8 @@ app.post('/send-email', (req, res) => {
     }
   });
 });
+
+app.options('/send-email', cors());
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
